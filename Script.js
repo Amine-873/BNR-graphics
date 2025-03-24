@@ -49,24 +49,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Inicializar EmailJS
-    emailjs.init("Pr_N7azP6hgmQqWcN");
-    
-    // Manejo del formulario de contacto
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+  // Update your EmailJS implementation
+emailjs.init("Pr_N7azP6hgmQqWcN"); // Your public key seems correct
 
-            // Enviar el formulario usando EmailJS
-            emailjs.sendForm('service_xogxu0q', 'template_o8a2g9o', contactForm)
-            .then(function(response) {
-                console.log('SUCCESS!', response.status, response.text);
-                alert('Mensaje enviado con éxito');
-                contactForm.reset();
-            }, function(error) {
-                console.error('FAILED...', error);
-                alert('Hubo un problema al enviar el mensaje: ' + error.text);
-            });
+// Modify your form submission handler
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = "Enviando...";
+        submitButton.disabled = true;
+
+        // Create parameters object
+        const templateParams = {
+            nombre: contactForm.nombre.value,
+            email: contactForm.email.value,
+            telefono: contactForm.telefono.value,
+            servicio: contactForm.servicio.value,
+            mensaje: contactForm.mensaje.value
+        };
+
+        // Send using emailjs.send() instead
+        emailjs.send('service_xogxu0q', 'template_o8a2g9o', templateParams)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            alert('Mensaje enviado con éxito');
+            contactForm.reset();
+        }, function(error) {
+            console.error('FAILED...', error);
+            alert('Hubo un problema al enviar el mensaje: ' + error.text);
+        })
+        .finally(function() {
+            // Reset button state
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
         });
-    }
+    });
+}
 });
