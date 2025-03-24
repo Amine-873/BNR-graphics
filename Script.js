@@ -56,15 +56,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Enviar el formulario usando EmailJS
             emailjs.sendForm('service_xogxu0q', 'template_o8a2g9o', contactForm)
             .then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
                 alert('Mensaje enviado con éxito');
                 contactForm.reset();
             }, function(error) {
-                console.error('Error:', error);
-                alert('Hubo un problema al enviar el mensaje');
+                console.error('FAILED...', error);
+                alert('Hubo un problema al enviar el mensaje: ' + error.text);
             });
         });
     }
