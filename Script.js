@@ -49,8 +49,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-  // Update your EmailJS implementation
-emailjs.init("Pr_N7azP6hgmQqWcN"); // Your public key seems correct
+ emailjs.init("Pr_N7azP6hgmQqWcN");
+
+// To this new format:
+(function() {
+    emailjs.init("Pr_N7azP6hgmQqWcN");
+})();
+    
 
 // Modify your form submission handler
 if (contactForm) {
@@ -72,17 +77,16 @@ if (contactForm) {
             mensaje: contactForm.mensaje.value
         };
 
-        // Send using emailjs.send() instead
+        // Updated EmailJS send syntax
         emailjs.send('service_xogxu0q', 'template_o8a2g9o', templateParams)
         .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
             alert('Mensaje enviado con éxito');
             contactForm.reset();
-        }, function(error) {
+        }).catch(function(error) {
             console.error('FAILED...', error);
             alert('Hubo un problema al enviar el mensaje: ' + error.text);
-        })
-        .finally(function() {
+        }).finally(function() {
             // Reset button state
             submitButton.textContent = originalText;
             submitButton.disabled = false;
