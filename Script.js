@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Inicializar EmailJS
-    emailjs.init("9vHFtC3TQdAhAIp_dIs7Y");
+    emailjs.init("Pr_N7azP6hgmQqWcN");
     
     // Manejo del formulario de contacto
     if (contactForm) {
