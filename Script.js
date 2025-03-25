@@ -101,33 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Inicialización de EmailJS con tu Public Key
-    emailjs.init('Pr_N7azP6hgmQqWcN');
-
-    // Form submission handler
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading state
-            const submitButton = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            submitButton.textContent = "Enviando...";
-            submitButton.disabled = true;
-
-            // Send form data
-            emailjs.sendForm('service_xogxu0q', 'template_o8a2g9o', contactForm)
-                .then(function() {
-                    alert('Mensaje enviado con éxito');
-                    contactForm.reset();
-                }, function(error) {
-                    alert('Hubo un problema al enviar el mensaje: ' + error.text);
-                })
-                .finally(function() {
-                    // Reset button state
-                    submitButton.textContent = originalText;
-                    submitButton.disabled = false;
-                });
-        });
-    }
 });
+});
+
