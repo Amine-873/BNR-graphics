@@ -58,14 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         emailjs.init("Pr_N7azP6hgmQqWcN");
         console.log('EmailJS inicializado correctamente');
-        
-        // Verificar la inicialización
-        if (!emailjs.init) {
-            throw new Error('EmailJS no se inicializó correctamente');
-        }
     } catch (error) {
         console.error('Error al inicializar EmailJS:', error);
-        alert('Error al inicializar el sistema de contacto. Por favor, inténtalo más tarde.');
     }
 
     // Función para validar el email
@@ -103,55 +97,27 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.textContent = "Enviando...";
             submitButton.disabled = true;
 
-            // Crear objeto de parámetros
+            // Crear objeto de parámetros exactamente como aparecen en la plantilla
             const templateParams = {
-                nombre: contactForm.nombre.value.trim(),
-                email: email,
-                telefono: telefono,
-                servicio: contactForm.servicio.value,
-                mensaje: contactForm.mensaje.value.trim()
+                from_name: contactForm.nombre.value.trim(),  // o this.elements.nombre.value.trim()
+                from_email: contactForm.email.value.trim(),
+                phone: contactForm.telefono.value.trim(),
+                service: contactForm.servicio.value,
+                message: contactForm.mensaje.value.trim(),
+                reply_to: contactForm.email.value.trim()
             };
-
             try {
-                // Verificar conexión a internet
-                if (!navigator.onLine) {
-                    throw new Error('No hay conexión a internet');
-                }
-
                 // Log para debugging
                 console.log('Enviando email con parámetros:', templateParams);
 
-                // Enviar con EmailJS con timeout
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout al enviar el mensaje')), 30000)
-                );
-
-                const emailPromise = emailjs.send('service_xogxu0q', 'template_o8a2g9o', templateParams);
+                const response = await emailjs.send('service_xogxu0q', 'template_o8a2g9o', templateParams);
                 
-                const response = await Promise.race([emailPromise, timeoutPromise]);
-                
-                console.log('Respuesta del servidor:', response);
-                
-                if (response.status === 200) {
-                    alert('¡Mensaje enviado con éxito!');
-                    contactForm.reset();
-                } else {
-                    throw new Error('Error al enviar el mensaje');
-                }
+                console.log('SUCCESS!', response.status, response.text);
+                alert('¡Mensaje enviado con éxito!');
+                contactForm.reset();
             } catch (error) {
-                console.error('Error detallado:', error);
-                
-                let errorMessage = 'Hubo un problema al enviar el mensaje. ';
-                
-                if (!navigator.onLine) {
-                    errorMessage += 'Verifica tu conexión a internet.';
-                } else if (error.message.includes('Timeout')) {
-                    errorMessage += 'El servidor tardó demasiado en responder.';
-                } else {
-                    errorMessage += 'Por favor, inténtalo de nuevo más tarde.';
-                }
-                
-                alert(errorMessage);
+                console.error('FAILED...', error);
+                alert('Error al enviar el mensaje: ' + error.text);
             } finally {
                 // Restaurar estado del botón
                 submitButton.textContent = originalText;
@@ -160,5 +126,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-
